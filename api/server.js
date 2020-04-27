@@ -12,8 +12,16 @@ server.use(cors());
 
 server.use("/api/auth", authRouter);
 server.use("/api/songs", authenticator, songsRouter);
-server.get("/", (req,res)=>{
-    res.send({api:"up"})
+server.get("/",(req,res)=>{
+    res.json({message:"api up",
+        auth_endpoints:{
+            login:"POST /api/auth/login",
+            register:"POST /api/auth/register"
+        },
+        music_endpoints:{
+            message:"under development",
+        }
+    });
 })
 
 module.exports = server;
