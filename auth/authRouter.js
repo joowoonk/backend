@@ -23,7 +23,6 @@ router.post("/login",userValidation,(req,res)=>{
 
 })
 
-
 router.post("/register",userValidation,(req,res)=>{
     const credentials = req.body;
     //Find user in databe
