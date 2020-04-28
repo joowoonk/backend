@@ -8,7 +8,7 @@ const db = require("../data/dbConfig");
 router.post("/login",userValidation,(req,res)=>{
     const {username,password} = req.body;
 
-    db("users").select("*").where({username}).then(([user])=>{
+    db("Users").select("*").where({username}).then(([user])=>{
         console.log(user);
         if(user && bcrypt.compareSync(password,user.password)){
             const token = generateToken(user);
@@ -26,7 +26,7 @@ router.post("/login",userValidation,(req,res)=>{
 router.post("/register",userValidation,(req,res)=>{
     const credentials = req.body;
     //Find user in databe
-    db("users").select("username").where({username:credentials.username}).then(data=>{
+    db("Users").select("username").where({username:credentials.username}).then(data=>{
         if(data.length==0){ //checks if user is already registered
             credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
         
