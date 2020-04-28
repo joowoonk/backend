@@ -29,8 +29,8 @@ router.post("/register",userValidation,(req,res)=>{
         if(data.length==0){ //checks if user is already registered
             credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
             db("Users").insert(credentials).then(id=>{                   //Insert user in db
-                console.log("ididididi",id[0]);
-                db("Users").select("*").where({"id":id[0]}).then(([user])=>{    //get new user in db
+                console.log("ididididi",id);
+                db("Users").select("*").where({"id":id}).then(([user])=>{    //get new user in db
                     res.status(201).json(user);
                 })
             }).catch(err=>{
