@@ -9,7 +9,6 @@ router.post("/login",userValidation,(req,res)=>{
     const {username,password} = req.body;
 
     db("Users").select("*").where({username}).then(([user])=>{
-        console.log(user);
         if(user && bcrypt.compareSync(password,user.password)){
             const token = generateToken(user);
             res.status(201).json({msg:"Authorized",token})
@@ -29,13 +28,13 @@ router.post("/register",userValidation,(req,res)=>{
     db("Users").select("username").where({username:credentials.username}).then(data=>{
         if(data.length==0){ //checks if user is already registered
             credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
-        
             db("Users").insert(credentials).then(([id])=>{                   //Insert user in db
                 db("Users").select("*").where({"id":id}).then(([user])=>{    //get new user in db
                     res.status(201).json(user);
                 })
+            }).catch(err=>{
+                console.log(err);
             });
-
         }else{
             res.status(201).json({message:"User is already registered"})
         }
