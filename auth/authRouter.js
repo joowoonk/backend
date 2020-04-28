@@ -62,7 +62,7 @@ function generateToken(user){
         expiresIn:"12h",
     }
     return jwt.sign(payload, secrets.secret, options);
-  }
+}
 
   /* Another login option
   if(user){
