@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable("SpotifyTable",table=>{
+  return knex.schema.createTable("spotifytable",table=>{
       table.increments("id");
       table.string("artist_name").notNullable();
       table.string("track_id").notNullable();
