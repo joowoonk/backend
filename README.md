@@ -19,6 +19,7 @@ POST /api/auth/login
 POST /api/auth/register
     Takes "username" and "password"  and if username is not already in the database creates a new user with those credentials.
     Returns the newly created username, with the hashed password
+    example :
     {
         username:"newAccount",
         password:"newAccount"
