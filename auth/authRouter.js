@@ -7,7 +7,6 @@ const db = require("../data/dbConfig");
 
 router.post("/login",userValidation,(req,res)=>{
     const {username,password} = req.body;
-
     db("Users").select("*").where({username}).then(([user])=>{
         if(user && bcrypt.compareSync(password,user.password)){
             const token = generateToken(user);
@@ -19,7 +18,6 @@ router.post("/login",userValidation,(req,res)=>{
         console.log(err);
         res.status(500).json({message:err});
     })
-
 })
 
 router.post("/register",userValidation,(req,res)=>{
@@ -40,9 +38,48 @@ router.post("/register",userValidation,(req,res)=>{
         }
     }).catch(err=>{
         console.log(err);
-        res.status(500).json({message:err});
+        res.status(500).json({message:"Error creating new user"});
     })
 })
+
+router.put("/user",userValidation,(req,res)=>{
+    const credentials = req.body;
+    //Find user in databe
+    const {username} = jwt.verify(req.headers.authorization,secrets.secret);
+    db("Users").select("id").where({"username":username}).first().then((id)=>{
+        credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
+        db("Users").update(credentials).where(id).then(data=>{
+            data?res.status(201).json({message:"User updated succesfully"}):res.status(500).json({message:"User couldnt be updated"})
+        }).catch(err=>{
+            console.log(err);
+            res.status(500).json({message:"Error updating user"});
+        })
+    })
+
+
+
+
+
+    // db("Users").select("username").where({username:credentials.username}).then(data=>{
+
+    //     if(data.length==0){ //checks if user is already registered
+    //         credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
+    //         db("Users").update(credentials, "id").then(([id])=>{                   
+    //             db("Users").select("*").where(id).then(([user])=>{    //get new user in db
+    //                 res.status(201).json(user);
+    //             })
+    //         }).catch(err=>{
+    //             console.log(err);
+    //         });
+    //     }else{
+    //         res.status(201).json({message:"User is already registered"})
+    //     }
+    // }).catch(err=>{
+    //     console.log(err);
+    //     res.status(500).json({message:err});
+    // })
+})
+
 
 module.exports = router;
 
