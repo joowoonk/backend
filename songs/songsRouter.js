@@ -46,8 +46,9 @@ router.post("/liked",(req,res)=>{ // this will give all the song that are liked 
     if(!(req.body.track_id)){
         return res.status(403).json({message:"Please provide the track ID"})
     }
+    console.log(req.headers.authorization);
     getIDbyusername(req.headers.authorization).then(id=>{
-        db("users_liked").insert({"user_id":id,"track_id":req.body.track_id}).then(data=>{
+        db("users_liked").insert({"user_id":id,"track_id":req.body.track_id},"*").then(data=>{
             data.length>0?res.status(200).json({message:"Song added to liked list"}):res.status(500)
         }).catch(err=>{
             console.log(err);
