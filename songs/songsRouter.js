@@ -5,7 +5,7 @@ const db = require("../data/dbConfig");
 
 
 router.get("/",(req,res)=>{
-    db("spotifysongs").select("*").limit(400).then(data=>{
+    db("spotifytable").select("*").limit(400).then(data=>{
         console.log(data);
     }).catch(err=>{
         console.log(err);
