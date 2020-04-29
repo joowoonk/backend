@@ -19,6 +19,8 @@ exports.up = function(knex) {
       table.integer("time_signature").notNullable();
       table.decimal("valence").notNullable();
       table.integer("popularity").notNullable();
+      table.integer("track_key").notNullable();
+      table.integer("artist_key").notNullable();
   })
 };
 
