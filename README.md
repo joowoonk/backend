@@ -65,6 +65,14 @@ POST /api/songs/liked
         track_id:"1981" //Where 1981 is the id of the song, not the track_id
     }
 
+POST /api/songs/recommended
+    Takes a "track_key".
+    Returns a message with an array of recommended songs and a graph information based on that song
+    Example:
+    {
+        "track_key":"152" //Where 152 is the track_key of a song
+    }
+
 
 
 

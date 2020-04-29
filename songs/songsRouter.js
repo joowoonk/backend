@@ -44,12 +44,14 @@ router.get("/liked",(req,res)=>{
 
 /** POST ENDPOINTS **/
 router.post("/recommended",(req,res)=>{ // this will give all the song that are liked by the logged in user
-    if(!(req.body.track_id)){
+    if(!(req.body.track_key)){
         return res.status(403).json({message:"Please provide the track ID"})
     }
-    axios.post("https://deeptunes-api.herokuapp.com/m", ({track_key:req.body.track_id})).then(axiosRes=>{
+    axios.post("https://deeptunes-api.herokuapp.com/m", (req.body)).then(axiosRes=>{
         db("spotifytable").select("*").whereIn("track_id",axiosRes.data).then(data=>{
-            res.status(200).json(data);
+            axios.post("https://deeptunes-api.herokuapp.com/r", (req.body)).then(axiosGraph=>{
+                res.status(200).json({recommendedSongs:data, graphInfo:axiosGraph.data});
+            })
         }).catch(err=>{
             console.log(err);
             res.status(500).json({message:"Couldnt retrieve songs from the database"})
@@ -58,7 +60,6 @@ router.post("/recommended",(req,res)=>{ // this will give all the song that are 
         console.log(err);
         res.status(500).json({message:err.message})
     })
-
 })
 
 router.post("/liked",(req,res)=>{ //This will give out the song by that id
