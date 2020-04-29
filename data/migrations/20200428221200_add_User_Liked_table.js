@@ -10,7 +10,7 @@ exports.up = function(knex) {
         .onDelete("RESTRICT")
         .onUpdate("CASCADE");
     //foreign key Track_ID
-    tbl.string("track_id")
+    tbl.integer("track_id")
         .notNullable()
         .references("id")
         .inTable("spotifytable")
