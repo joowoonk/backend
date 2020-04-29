@@ -7,7 +7,7 @@ TODO (top takes priority)
 [50] Basic api setup 
 [75] Users table
 [75] Authentication
-[] Save Like songs {standby}
+[] Save Liked songs {standby}
 [] Get Recommended songs (stanby)
 [] Web deployment
 
