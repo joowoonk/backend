@@ -114,11 +114,10 @@ router.delete("/liked",(req,res)=>{ // this will give all the song that are like
     if(!(req.body.track_id)){
         return res.status(403).json({message:"Please provide the track ID"})
     }
-    
     getIDbyusername(req.headers.authorization).then(id=>{
         db("users_liked").where({"user_id":id,"track_id":req.body.track_id},"*").delete().then(data=>{
             console.log(data);
-            data?res.status(200).json({message:"Song removed from liked list"}):res.status(201).json({message:"Couldnt find liked song with that id"})
+            data?res.status(200).json({message:"Song removed from liked list", track_id:req.body.track_id}):res.status(201).json({message:"Couldnt find liked song with that id"})
         }).catch(err=>{
             console.log(err);
             res.status(500).json({message:"Error adding song"})
