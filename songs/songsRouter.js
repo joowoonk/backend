@@ -66,8 +66,6 @@ router.post("/liked",(req,res)=>{ //This will give out the song by that id
     if(!(req.body.track_id)){
         return res.status(403).json({message:"Missing track ID"})
     }
-
-    
     getByTrackID(req.body.track_id).then(data=>{
         if(data){      
             getIDbyusername(req.headers.authorization).then(user_id=>{
@@ -75,7 +73,7 @@ router.post("/liked",(req,res)=>{ //This will give out the song by that id
                     if(song){
                         res.status(403).json({message:"You already liked that song"})
                     }else{
-                        db("users_liked").insert({user_id, track_id:req.body.track_id}).then(([data])=>{
+                        db("users_liked").insert({user_id, track_id:req.body.track_id},"*").then(([data])=>{
                             data?res.status(201).json({message:"Liked song added"}):res.status(500).json({message:"Couldnt add song"})
                         })
                     }
