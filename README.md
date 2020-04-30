@@ -25,6 +25,10 @@ POST /api/auth/register
         password:"newAccount"
     }
 
+GET /api/auth/user
+    Returns the logged in username
+
+
 PUT /api/auth/user
 Takes "username" and "password"  and if username is not already in the database creates a new user with those credentials.
     Returns a succesful message.
@@ -57,7 +61,7 @@ POST /api/songs/liked
         track_id:"1981" //Where 1981 is the id of the song, not the track_id
     }
     
-POST /api/songs/liked
+DELETE /api/songs/liked
     Takes an "track_id" that is an id of a song (not track_id like it was supposed to be).
     Returns a message displaying if the song could be deleted or not.
     example : 

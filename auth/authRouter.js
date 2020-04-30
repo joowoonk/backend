@@ -2,6 +2,7 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secrets = require("./secrets")
+const authenticator = require("./authenticator");
 
 const db = require("../data/dbConfig");
 
@@ -42,9 +43,8 @@ router.post("/register",userValidation,(req,res)=>{
     })
 })
 
-router.put("/user",userValidation,(req,res)=>{
+router.put("/user",userValidation,authenticator,(req,res)=>{
     const credentials = req.body;
-    //Find user in databe
     const {username} = jwt.verify(req.headers.authorization,secrets.secret);
     db("Users").select("id").where({"username":username}).first().then((id)=>{
         credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
@@ -55,31 +55,17 @@ router.put("/user",userValidation,(req,res)=>{
             res.status(500).json({message:"Error updating user"});
         })
     })
-
-
-
-
-
-    // db("Users").select("username").where({username:credentials.username}).then(data=>{
-
-    //     if(data.length==0){ //checks if user is already registered
-    //         credentials.password = bcrypt.hashSync(credentials.password, 8); //hash password
-    //         db("Users").update(credentials, "id").then(([id])=>{                   
-    //             db("Users").select("*").where(id).then(([user])=>{    //get new user in db
-    //                 res.status(201).json(user);
-    //             })
-    //         }).catch(err=>{
-    //             console.log(err);
-    //         });
-    //     }else{
-    //         res.status(201).json({message:"User is already registered"})
-    //     }
-    // }).catch(err=>{
-    //     console.log(err);
-    //     res.status(500).json({message:err});
-    // })
 })
 
+router.get("/user",authenticator,(req,res)=>{
+    const {username} = jwt.verify(req.headers.authorization,secrets.secret);
+    db("Users").select("username").where({"username":username}).first().then((user)=>{
+        res.status(200).json(user);
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({message:"Error retrieving user"})
+    })
+})
 
 module.exports = router;
 
