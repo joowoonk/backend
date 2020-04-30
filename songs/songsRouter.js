@@ -66,10 +66,28 @@ router.post("/liked",(req,res)=>{ //This will give out the song by that id
     if(!(req.body.track_id)){
         return res.status(403).json({message:"Missing track ID"})
     }
+
+    
     getByTrackID(req.body.track_id).then(data=>{
-        data
-        ?res.status(200).json(data)
-        :res.status(404).json({message:"Couldn't find song with that track id"})
+        if(data){      
+            getIDbyusername(req.headers.authorization).then(user_id=>{
+                db("users_liked").select("*").where({"user_id": user_id, "track_id":req.body.track_id}).first().then(song=>{
+                    if(song){
+                        res.status(403).json({message:"You already liked that song"})
+                    }else{
+                        db("users_liked").insert({user_id, track_id:req.body.track_id}).then(([data])=>{
+                            data?res.status(201).json({message:"Liked song added"}):res.status(500).json({message:"Couldnt add song"})
+                        })
+                    }
+                })
+            });
+        }else{
+            res.status(404).json({message:"Couldn't find song with that track id"})
+        }
+     
+        // data
+        // ?res.status(201).json(data)
+        // :res.status(404).json({message:"Couldn't find song with that track id"})
     }).catch(err=>{
         console.log(err);
         res.status(500).json({message:"Error fetching song by that ID"})
@@ -98,6 +116,7 @@ router.delete("/liked",(req,res)=>{ // this will give all the song that are like
     if(!(req.body.track_id)){
         return res.status(403).json({message:"Please provide the track ID"})
     }
+    
     getIDbyusername(req.headers.authorization).then(id=>{
         db("users_liked").where({"user_id":id,"track_id":req.body.track_id},"*").delete().then(data=>{
             console.log(data);
